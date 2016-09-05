@@ -54,7 +54,24 @@ class NewPost(Handler):
             error = "Please enter both a title and content."
             self.render_form(title, content, error)
 
+class ViewPostHandler(webapp2.RequestHandler):
+    def get(self, id):
+#        post_id = self.request.get("id")
+        new_id = id
+        new_post = BlogPost.get_by_id(int(new_id))
+        if new_post:
+            title = new_post.title
+            content = new_post.content
+            response = title + content
+            self.response.write(response)
+        else:
+            self.response.write("Sorry, there is no post with that id.")
+
+
+
+
 app = webapp2.WSGIApplication([
     ('/blog', MainHandler),
-    ('/newpost', NewPost)
+    ('/newpost', NewPost),
+    webapp2.Route('/blog/<id:\d+>', ViewPostHandler)
 ], debug=True)
