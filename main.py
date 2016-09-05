@@ -25,14 +25,21 @@ class BlogPost(db.Model):
     created = db.DateTimeProperty(auto_now_add = True)
 
 class MainHandler(Handler):
-    def render_front(self, title="", content="", error=""):
+    def render_front(self):
         blogposts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC LIMIT 5")
 
-        self.render("front.html", title=title, content=content, error=error,
-                    blogposts = blogposts)
+        self.render("front.html", blogposts = blogposts)
 
     def get(self):
         self.render_front()
+
+
+class NewPost(Handler):
+    def render_form(self, title="", content="", error=""):
+        self.render("form.html", title=title, content=content, error=error)
+
+    def get(self):
+        self.render_form()
 
     def post(self):
         title = self.request.get("title")
@@ -45,9 +52,9 @@ class MainHandler(Handler):
             self.redirect("/blog")
         else:
             error = "Please enter both a title and content."
-            self.render_front(title, content, error)
+            self.render_form(title, content, error)
 
 app = webapp2.WSGIApplication([
     ('/blog', MainHandler),
-#    ('/newpost', NewPost)
+    ('/newpost', NewPost)
 ], debug=True)
