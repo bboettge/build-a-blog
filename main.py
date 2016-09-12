@@ -72,11 +72,12 @@ class ViewPostHandler(Handler):
             error = "Sorry, there is no post with that id."
             self.render_post("", "", "", error)
 
-
+def get_posts(limit, offset):
+    blogposts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC LIMIT limit OFFSET offset")
 
 
 app = webapp2.WSGIApplication([
     ('/blog', MainHandler),
-    ('/newpost', NewPost),
+    ('/blog/newpost', NewPost),
     webapp2.Route('/blog/<id:\d+>', ViewPostHandler)
 ], debug=True)
