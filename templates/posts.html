@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="blogpost">
-  <div class="blogpost-title">{{title}}</div>
-  <div class="blogpost-body">{{content}}</div>
-</div>
-
-
+    <div class="blogpost">
+      <div class="blogpost-title"><a href={{url}}>{{title}}</a></div>
+      <div class="blogpost-body">{{content}}</div>
+      <div class="error">{{error}}</div>
+    </div>
 {% endblock %}

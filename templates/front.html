@@ -4,7 +4,7 @@
 
 {% for blogpost in blogposts %}
       <div class="blogpost">
-        <div class="blogpost-title">{{blogpost.title}}</div>
+        <div class="blogpost-title"><a href="http://localhost:11080/blog/{{blogpost.key().id()}}">{{blogpost.title}}</a></div>
         <div class="blogpost-body">{{blogpost.content}}</div>
       </div>
 {% endfor %}

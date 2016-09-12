@@ -27,7 +27,7 @@ class BlogPost(db.Model):
 class MainHandler(Handler):
     def render_front(self):
         blogposts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC LIMIT 5")
-
+#        post_id = blogposts.key().id()
         self.render("front.html", blogposts = blogposts)
 
     def get(self):
@@ -48,13 +48,16 @@ class NewPost(Handler):
         if title and content:
             a = BlogPost(title= title, content = content)
             a.put()
-
-            self.redirect("/blog")
+            new_id = str(a.key().id())
+            self.redirect("/blog/" + new_id)
         else:
             error = "Please enter both a title and content."
             self.render_form(title, content, error)
 
-class ViewPostHandler(webapp2.RequestHandler):
+class ViewPostHandler(Handler):
+    def render_post(self, title="", content="", url="", error=""):
+        self.render("posts.html", title=title, content=content, url=url, error=error)
+
     def get(self, id):
 #        post_id = self.request.get("id")
         new_id = id
@@ -62,10 +65,12 @@ class ViewPostHandler(webapp2.RequestHandler):
         if new_post:
             title = new_post.title
             content = new_post.content
-            response = title + content
-            self.response.write(response)
+            url = "http://localhost:11080/blog/" + str(new_post.key().id())
+#            response = title + content
+            self.render_post(title, content, url)
         else:
-            self.response.write("Sorry, there is no post with that id.")
+            error = "Sorry, there is no post with that id."
+            self.render_post("", "", "", error)
 
 
 
